@@ -92,8 +92,15 @@ color:#00e5ff;
 st.markdown("<div class='main-title'>⚙ AI MACHINE HEALTH MONITOR</div>", unsafe_allow_html=True)
 st.markdown("<div class='sub-title'>Real-Time Industrial Predictive Maintenance System</div>", unsafe_allow_html=True)
 
-# ---------------- DATABASE ----------------
-MongoClient("mongodb+srv://Vomkar:vomkar123@cluster0.s58phda.mongodb.net/peditrix?retryWrites=true&w=majority")
+# ---------------- DATABASE CONNECTION ----------------
+# Replace 'atlas-xxxx-shard-0' with your actual replica set name from MongoDB Atlas
+client = MongoClient(
+    "mongodb://Vomkar:vomkar123@cluster0-shard-00-00.s58phda.mongodb.net:27017,"
+    "cluster0-shard-00-01.s58phda.mongodb.net:27017,"
+    "cluster0-shard-00-02.s58phda.mongodb.net:27017/"
+    "peditrix?ssl=true&replicaSet=atlas-0abcde-shard-0&authSource=admin&retryWrites=true&w=majority"
+)
+
 db = client["ai_machine"]
 collection = db["sensor_data"]
 
