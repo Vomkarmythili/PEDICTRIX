@@ -4,6 +4,7 @@ import numpy as np
 import time
 import plotly.express as px
 from datetime import datetime, timedelta
+from pymongo import MongoClient
 
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(
@@ -93,21 +94,52 @@ color:#00e5ff;
 st.markdown("<div class='main-title'>⚙ AI MACHINE HEALTH MONITOR</div>", unsafe_allow_html=True)
 st.markdown("<div class='sub-title'>Real-Time Industrial Predictive Maintenance System</div>", unsafe_allow_html=True)
 
-# ---------------- DATABASE (MOCK DATA) ----------------
-# For UI testing without MongoDB
-timestamps = [datetime.now() - timedelta(minutes=i*5) for i in range(100)]
-temperature = np.random.uniform(50, 80, size=100)
-vibration = np.random.uniform(0, 5, size=100)
-health_score = np.random.randint(40, 100, size=100)
-status = np.random.choice(["NORMAL", "FAULT"], size=100)
+# ---------------- DATABASE ----------------
+use_mock = True  # Set False if you want to try connecting to MongoDB
 
-data = pd.DataFrame({
-    "timestamp": timestamps,
-    "temperature": temperature,
-    "vibration": vibration,
-    "health_score": health_score,
-    "status": status
-})
+if use_mock:
+    # ---------------- MOCK DATA ----------------
+    timestamps = [datetime.now() - timedelta(minutes=i*5) for i in range(100)]
+    temperature = np.random.uniform(50, 80, size=100)
+    vibration = np.random.uniform(0, 5, size=100)
+    health_score = np.random.randint(40, 100, size=100)
+    status = np.random.choice(["NORMAL", "FAULT"], size=100)
+
+    data = pd.DataFrame({
+        "timestamp": timestamps,
+        "temperature": temperature,
+        "vibration": vibration,
+        "health_score": health_score,
+        "status": status
+    })
+else:
+    try:
+        client = MongoClient(
+            "mongodb+srv://Vomkar:vomkar123@cluster0.s58phda.mongodb.net/peditrix?retryWrites=true&w=majority",
+            serverSelectionTimeoutMS=5000  # 5 seconds timeout
+        )
+        db = client["ai_machine"]
+        collection = db["sensor_data"]
+        data = list(collection.find().sort("timestamp", -1).limit(100))
+        if len(data) == 0:
+            raise ValueError("No data found in MongoDB, falling back to mock data.")
+        data = pd.DataFrame(data)
+    except Exception as e:
+        st.warning(f"Could not connect to MongoDB: {e}. Using mock data instead.")
+        # ---------------- MOCK DATA ----------------
+        timestamps = [datetime.now() - timedelta(minutes=i*5) for i in range(100)]
+        temperature = np.random.uniform(50, 80, size=100)
+        vibration = np.random.uniform(0, 5, size=100)
+        health_score = np.random.randint(40, 100, size=100)
+        status = np.random.choice(["NORMAL", "FAULT"], size=100)
+
+        data = pd.DataFrame({
+            "timestamp": timestamps,
+            "temperature": temperature,
+            "vibration": vibration,
+            "health_score": health_score,
+            "status": status
+        })
 
 # ---------------- DASHBOARD ----------------
 if len(data) > 0:
