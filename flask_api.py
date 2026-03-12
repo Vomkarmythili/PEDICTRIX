@@ -9,7 +9,7 @@ app = Flask(__name__)
 model = joblib.load("model.pkl")
 
 # MongoDB
-client = MongoClient("mongodb://localhost:27017/")
+MongoClient("mongodb+srv://Vomkar:vomkar123@cluster0.s58phda.mongodb.net/peditrix?retryWrites=true&w=majority")
 db = client["ai_machine"]
 collection = db["sensor_data"]
 
