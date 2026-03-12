@@ -1,7 +1,9 @@
 flask
+dnspython
 pymongo[srv]
 scikit-learn
 joblib
 pandas
 plotly
+
 
