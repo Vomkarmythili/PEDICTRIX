@@ -93,7 +93,7 @@ st.markdown("<div class='main-title'>⚙ AI MACHINE HEALTH MONITOR</div>", unsaf
 st.markdown("<div class='sub-title'>Real-Time Industrial Predictive Maintenance System</div>", unsafe_allow_html=True)
 
 # ---------------- DATABASE ----------------
-client = MongoClient("mongodb://localhost:27017/")
+MongoClient("mongodb+srv://Vomkar:vomkar123@cluster0.s58phda.mongodb.net/peditrix?retryWrites=true&w=majority")
 db = client["ai_machine"]
 collection = db["sensor_data"]
 
