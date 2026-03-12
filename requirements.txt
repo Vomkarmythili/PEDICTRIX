@@ -3,3 +3,4 @@ pymongo
 scikit-learn
 joblib
 pandas
+plotly
