@@ -1,6 +1,7 @@
 flask
-pymongo
+pymongo[srv]
 scikit-learn
 joblib
 pandas
 plotly
+
